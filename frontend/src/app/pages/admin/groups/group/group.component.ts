@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { Component, inject, ChangeDetectionStrategy, type OnInit } from '@angular/core'
+import { Component, inject, ChangeDetectionStrategy, type OnInit, signal } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { MaterialModule } from '../../../../material-module'
 import { ValidationErrorPipe } from '../../../../pipes/ValidationErrorPipe'
@@ -19,6 +19,7 @@ import { TranslatePipe } from '@ngx-translate/core'
 import { stringCompare, type ItemIn, type Nullable } from '@shared/utils'
 import { OptionValueDialogComponent, type OptionValueDialogData, type OptionValueResult }
   from '../../../../dialogs/option-value-dialog/option-value-dialog.component'
+import { debounceTime, distinctUntilChanged, Subject, Subscription } from 'rxjs'
 
 @Component({
   selector: 'app-group',
@@ -32,10 +33,9 @@ export class GroupComponent implements OnInit {
 
   public id: string | null = null
 
-  public users: UserWithoutPassword[] = []
-  public unselectedUsers: UserWithoutPassword[] = []
-  public selectableUsers: UserWithoutPassword[] = []
+  public selectableUsers = signal<UserWithoutPassword[]>([])
   userSelect = new FormControl<UserWithoutPassword | null>(null)
+  userSelectInputSubject = new Subject<string>()
 
   public form = new FormGroup({
     // only alphanumeric, underscore, and hyphen
@@ -56,6 +56,7 @@ export class GroupComponent implements OnInit {
   private dialog = inject(MatDialog)
 
   ngOnInit() {
+    let userSelectInputSub: Subscription | null = null
     this.route.paramMap.subscribe(async (params) => {
       try {
         this.spinnerService.show()
@@ -73,8 +74,17 @@ export class GroupComponent implements OnInit {
           })
         }
 
-        this.users = await this.adminService.users()
-        this.userAutoFilter()
+        await this.userAutoFilter()
+
+        if (userSelectInputSub) {
+          userSelectInputSub.unsubscribe()
+        }
+        userSelectInputSub = this.userSelectInputSubject.pipe(
+          debounceTime(300),
+          distinctUntilChanged(),
+        ).subscribe(async (value) => {
+          await this.userAutoFilter(value)
+        })
 
         if (this.form.controls.name.value?.toLowerCase() === ADMIN_GROUP.toLowerCase()) {
           this.form.controls.name.disable()
@@ -90,27 +100,16 @@ export class GroupComponent implements OnInit {
     })
   }
 
-  userAutoFilter(value: string = '') {
-    this.unselectedUsers = this.users.filter((u) => {
-      return !this.form.controls.users.value.find(gu => u.id === gu.id)
-    })
-    this.selectableUsers = this.unselectedUsers
-      .filter((u) => {
-        return (
-          u.username.toLowerCase().includes(value.toLowerCase())
-          || u.email?.toLowerCase().includes(value.toLowerCase())
-          || u.name?.toLowerCase().includes(value.toLowerCase())
-        )
-      })
-      .slice(0, 5)
-    if (this.unselectedUsers.length) {
-      this.userSelect.enable()
-    } else {
-      this.userSelect.disable()
-    }
+  async userAutoFilter(value: string = '') {
+    const selectedIds = new Set(this.form.controls.users.value.map(u => u.id))
+    const users = (await this.adminService.users(0, 10, value)).users.filter(u => !selectedIds.has(u.id)).slice(0, 5)
+
+    this.selectableUsers.set(users.sort((a, b) => {
+      return stringCompare(a.username, b.username)
+    }))
   }
 
-  addUser(event: MatAutocompleteSelectedEvent) {
+  async addUser(event: MatAutocompleteSelectedEvent) {
     const value = event.option.value as UserWithoutPassword | null
     if (!value) {
       return
@@ -122,13 +121,13 @@ export class GroupComponent implements OnInit {
     )
     this.form.controls.users.markAsDirty()
     this.userSelect.setValue(null)
-    this.userAutoFilter()
+    await this.userAutoFilter()
   }
 
-  removeUser(value: string) {
+  async removeUser(value: string) {
     this.form.controls.users.setValue(this.form.controls.users.value.filter(u => u.id !== value))
     this.form.controls.users.markAsDirty()
-    this.userAutoFilter()
+    await this.userAutoFilter()
   }
 
   async addCustomClaim() {

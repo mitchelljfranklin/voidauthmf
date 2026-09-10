@@ -24,7 +24,6 @@
     "navigation": {
       "profile": "Profil",
       "admin": {
-        "title": "Administration",
         "oidc-apps": "Applications OIDC",
         "proxyauth-domains": "Domaines ProxyAuth",
         "users": "Utilisateurs",

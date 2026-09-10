@@ -1,7 +1,7 @@
 import type { Account, AccountClaims, KoaContextWithOIDC } from 'oidc-provider'
 import { db } from './db'
 import type { UserGroup, Group } from '@shared/db/Group'
-import type { UserDetails, UserWithAdminIndicator } from '@shared/api-response/UserDetails'
+import type { UserDetails } from '@shared/api-response/UserDetails'
 import type { User } from '@shared/db/User'
 import { ADMIN_USER, ADMIN_GROUP, TTLs } from '@shared/constants'
 import { randomBytes, randomUUID } from 'crypto'
@@ -19,9 +19,22 @@ import { verifyLDAPPassword } from '../ldap/sync'
 import { logger } from '../util/logger'
 import { getGroupsCustomClaims, getUserCustomClaims } from './claims'
 import { calculateCustomClaims } from '@shared/user'
+import type { UsersResponse } from '@shared/api-response/admin/UsersResponse'
+import { escapeLikePattern } from './util'
 
-export async function getUsers(searchTerm?: string): Promise<UserWithAdminIndicator[]> {
-  return (await db().table<User>(TABLES.USER).select<(User & { isAdmin: number })[]>('user.*', db().raw(`
+export async function getUsers(
+  options: {
+    page: number
+    pageSize: number
+    searchTerm?: string
+    sortActive?: 'username' | 'email' | 'emailVerified' | 'approved' | 'expiresAt' | 'createdAt'
+    sortDirection?: 'asc' | 'desc' | ''
+  },
+): Promise<UsersResponse> {
+  const { page, pageSize, searchTerm, sortActive = 'createdAt', sortDirection = 'desc' } = options
+  const searchPattern = searchTerm ? `%${escapeLikePattern(searchTerm)}%` : undefined
+
+  const query = db().table<User>(TABLES.USER).select<(User & { isAdmin: number })[]>('user.*', db().raw(`
       CASE 
         WHEN EXISTS (
           SELECT 1 
@@ -33,11 +46,37 @@ export async function getUsers(searchTerm?: string): Promise<UserWithAdminIndica
         ELSE 0 
       END as "isAdmin"
     `, [ADMIN_GROUP])).where((w) => {
-    if (searchTerm) {
-      w.whereRaw('lower("username") like lower(?)', [`%${searchTerm}%`])
-      w.orWhereRaw('lower("email") like lower(?)', [`%${searchTerm}%`])
+    if (searchPattern) {
+      w.whereRaw('lower("username") like lower(?) escape \'\\\'', [searchPattern])
+      w.orWhereRaw('lower("email") like lower(?) escape \'\\\'', [searchPattern])
+      w.orWhereRaw('lower("name") like lower(?) escape \'\\\'', [searchPattern])
     }
-  }).orderBy(db().ref('createdAt').withSchema(TABLES.USER), 'desc')).map((user) => {
+  })
+
+  const count = +((await query.clone().clearSelect().count({ count: '*' }).first())?.count ?? 0)
+
+  switch (sortActive) {
+    case 'username':
+      query.orderBy('username', sortDirection || 'asc')
+      break
+    case 'email':
+      query.orderBy('email', sortDirection || 'asc')
+      break
+    case 'emailVerified':
+      query.orderBy('emailVerified', sortDirection || 'desc')
+      break
+    case 'approved':
+      query.orderBy('approved', sortDirection || 'desc')
+      break
+    case 'expiresAt':
+      query.orderBy('expiresAt', sortDirection || 'desc')
+      break
+    case 'createdAt':
+    default:
+      query.orderBy('createdAt', sortDirection || 'desc')
+  }
+
+  const users = (await query.clone().offset(page * pageSize).limit(pageSize)).map((user) => {
     const { passwordHash, isAdmin, ...u } = user
     return {
       ...u,
@@ -46,6 +85,8 @@ export async function getUsers(searchTerm?: string): Promise<UserWithAdminIndica
       hasEmail: !!user.email,
     }
   })
+
+  return { count, users }
 }
 
 export async function getLDAPVisibleUsers(limit = 1000): Promise<Pick<User, 'id' | 'username' | 'name' | 'email'>[]> {

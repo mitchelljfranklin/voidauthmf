@@ -24,7 +24,6 @@
     "navigation": {
       "profile": "个人资料",
       "admin": {
-        "title": "管理",
         "oidc-apps": "OIDC 应用",
         "proxyauth-domains": "代理认证域",
         "users": "用户",
