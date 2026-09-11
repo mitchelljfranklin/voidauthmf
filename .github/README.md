@@ -1,15 +1,15 @@
-# Mitch‑VoidAuth
+# Mitch-Auth
 
-[![Build](https://img.shields.io/github/actions/workflow/status/mitchelljfranklin/mitch-voidauth/release-fork.yml?label=build)](https://github.com/mitchelljfranklin/mitch-voidauth/actions)
+[![Build](https://img.shields.io/github/actions/workflow/status/mitchelljfranklin/mitch-auth/release-fork.yml?label=build)](https://github.com/mitchelljfranklin/mitch-auth/actions)
 [![License: AGPL v3](https://img.shields.io/badge/license-AGPL--3.0-orange)](LICENSE)
 
 > An enhanced fork of VoidAuth — SSO for your self-hosted universe, with LDAP Directory Sync, runtime admin configuration, multi-arch Docker images, and all upstream features.
 
 ---
 
-## What is Mitch‑VoidAuth
+## What is Mitch-Auth
 
-Mitch‑VoidAuth is a fork of [VoidAuth](https://voidauth.app) — an open-source SSO authentication and user management platform built by [Derek Paschal](https://github.com/notquitenothing). This fork enhances VoidAuth with several features while keeping all upstream capabilities:
+Mitch-Auth is a fork of [VoidAuth](https://voidauth.app) — an open-source SSO authentication and user management platform built by [Derek Paschal](https://github.com/notquitenothing). This fork enhances VoidAuth with several features while keeping all upstream capabilities:
 
 - **LDAP Directory Sync** — the headline feature. Pull users and groups from Active Directory, OpenLDAP, 389 DS, LLDAP, and any LDAPv3 directory into VoidAuth on a configurable schedule.
 - **Admin Settings** — configure app behaviour from the web interface. Toggle signups, set MFA requirements, change branding (colour picker + logo upload), adjust rate limits, and more — no environment variable edits or restarts needed.
@@ -20,11 +20,11 @@ All upstream features are included and this fork periodically merges changes fro
 
 ---
 
-## Why Mitch‑VoidAuth
+## Why Mitch-Auth
 
 VoidAuth is an excellent SSO platform, but it has no built-in mechanism to consume identities from an existing directory. If your users and groups already live in Active Directory, OpenLDAP, or FreeIPA, you either maintain duplicate accounts or do without SSO.
 
-Mitch‑VoidAuth fills that gap with **LDAP Directory Sync** — the primary reason this fork exists. Beyond that, it layers on operational improvements that make day-to-day administration smoother: a settings page in the admin panel, multi-arch images for diverse hardware, and comprehensive documentation.
+Mitch-Auth fills that gap with **LDAP Directory Sync** — the primary reason this fork exists. Beyond that, it layers on operational improvements that make day-to-day administration smoother: a settings page in the admin panel, multi-arch images for diverse hardware, and comprehensive documentation.
 
 It is intended for:
 
@@ -40,7 +40,7 @@ It is intended for:
 # compose.yml
 services:
   voidauth:
-    image: ghcr.io/mitchelljfranklin/mitch-voidauth:latest
+    image: ghcr.io/mitchelljfranklin/mitch-auth:latest
     restart: unless-stopped
     volumes:
       - ./voidauth/config:/app/config
@@ -282,7 +282,7 @@ docker compose exec voidauth-db pg_dump -U postgres > voidauth-db-$(date +%F).sq
 
 ## Credits
 
-Mitch‑VoidAuth is a fork of [VoidAuth](https://github.com/voidauth/voidauth) by [Derek Paschal](https://github.com/notquitenothing). VoidAuth is an incredible project — if this fork helps you, consider starring the [upstream repository](https://github.com/voidauth/voidauth).
+Mitch-Auth is a fork of [VoidAuth](https://github.com/voidauth/voidauth) by [Derek Paschal](https://github.com/notquitenothing). VoidAuth is an incredible project — if this fork helps you, consider starring the [upstream repository](https://github.com/voidauth/voidauth).
 
 LDAP sync integration built on [ldapts](https://github.com/ldapts/ldapts).
 

@@ -2,19 +2,19 @@
 layout: home
 
 hero:
-  name: "Mitch‑VoidAuth"
+  name: "Mitch-Auth"
   text: "Enhanced VoidAuth fork"
   tagline: A fork of VoidAuth — open-source SSO for your self-hosted universe. Features LDAP Directory Sync, runtime admin configuration, multi-arch Docker builds, and all upstream VoidAuth capabilities.
   image:
     src: /favicon.svg
-    alt: Mitch-VoidAuth
+    alt: Mitch-Auth
   actions:
     - theme: brand
       text: Get Started
       link: /Getting-Started
     - theme: alt
       text: View on GitHub
-      link: https://github.com/mitchelljfranklin/mitch-voidauth
+      link: https://github.com/mitchelljfranklin/mitch-auth
 
 features:
   - title: LDAP Directory Sync
@@ -37,7 +37,7 @@ features:
 
 ## Credits
 
-Mitch‑VoidAuth is a fork of [VoidAuth](https://voidauth.app) by [Derek Paschal](https://github.com/notquitenothing). VoidAuth is an incredible, actively maintained project — if this fork helps you, consider starring the [upstream repository](https://github.com/voidauth/voidauth).
+Mitch-Auth is a fork of [VoidAuth](https://voidauth.app) by [Derek Paschal](https://github.com/notquitenothing). VoidAuth is an incredible, actively maintained project — if this fork helps you, consider starring the [upstream repository](https://github.com/voidauth/voidauth).
 
 The LDAP Directory Sync feature is built on [ldapts](https://github.com/ldapts/ldapts).
 

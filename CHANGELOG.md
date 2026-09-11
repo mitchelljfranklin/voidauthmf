@@ -77,15 +77,16 @@ Security hardening release based on a full audit. Highlights:
 - Fork-specific `AGENTS.md` (developer operating guide)
 - Fork-specific `CHANGELOG.md` (this file)
 - `Dockerfile.fork` — uses public `node:24-alpine3.22` instead of private `dhi.io/node:24-alpine3.22`
-- `compose.fork.yml` — points to `ghcr.io/mitchelljfranklin/mitch-voidauth`, enables LDAP port 3890
+- `compose.fork.yml` — points to `ghcr.io/mitchelljfranklin/mitch-auth`, enables LDAP port 3890
 - `.github/README.md` — fork-specific README (root `README.md` kept as upstream mirror)
 - `docs/package.json` — separate VitePress dependency to avoid merge conflicts with root `package.json`
 
 #### Changed
-- Docker image: `voidauth/voidauth:latest` → `ghcr.io/mitchelljfranklin/mitch-voidauth:latest`
+- **Rebranded**: `mitch-voidauth` / `Mitch-VoidAuth` → `mitch-auth` / `Mitch-Auth`; GHCR image is now `ghcr.io/mitchelljfranklin/mitch-auth` (requires the GitHub repository to be renamed to match — old URLs redirect automatically after rename). Git branch names are unchanged
+- Docker image: `voidauth/voidauth:latest` → `ghcr.io/mitchelljfranklin/mitch-auth:latest`
 - Docker base image: `dhi.io/node:24-alpine3.22` → `node:24-alpine3.22` (public) in `Dockerfile.fork`
 - Documentation URLs: `voidauth.app` → `auth.mitchforge.com`
-- GitHub URLs: `voidauth/voidauth` → `mitchelljfranklin/mitch-voidauth`
+- GitHub URLs: `voidauth/voidauth` → `mitchelljfranklin/mitch-auth`
 - Issue templates: Markdown → YAML forms with LDAP sync fields and pre-submission checklists
 - PR template: added lint, build, multi-arch, and fork-file checklists
 - `checkPasswordHash()` in `server/db/user.ts` — extended with LDAP bind auth fallback

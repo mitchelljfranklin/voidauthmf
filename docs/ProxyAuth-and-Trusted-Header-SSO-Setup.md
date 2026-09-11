@@ -269,7 +269,7 @@ services:
       - voidauth
 
   voidauth:
-    image: ghcr.io/mitchelljfranklin/mitch-voidauth:latest
+    image: ghcr.io/mitchelljfranklin/mitch-auth:latest
     volumes:
       - ./voidauth/config:/app/config
     environment:

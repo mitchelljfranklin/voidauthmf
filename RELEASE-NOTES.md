@@ -1,4 +1,4 @@
-# 🛡️ Mitch-VoidAuth v2026.09.0 — Security Hardening Release
+# 🛡️ Mitch-Auth v2026.09.0 — Security Hardening Release
 
 > **TL;DR** — A full security audit of the fork produced **30+ fixes and hardening changes**, an **OWASP ZAP penetration scan** came back clean (zero high-severity findings), and a **52-commit upstream sync** brings the Custom Claims feature, per-proxy trust (`TRUSTED_PROXIES`), and supply-chain hardening. Sessions are now 14 days, TOTP codes can't be replayed, and every fork behaviour is enforced by an automated seam + verification system.
 

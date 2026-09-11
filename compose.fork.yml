@@ -1,6 +1,6 @@
 services:
   voidauth:
-    image: ghcr.io/mitchelljfranklin/mitch-voidauth:latest
+    image: ghcr.io/mitchelljfranklin/mitch-auth:latest
     restart: unless-stopped
     volumes:
       - ./voidauth/config:/app/config

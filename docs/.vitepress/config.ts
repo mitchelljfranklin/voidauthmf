@@ -40,7 +40,7 @@ const sidebar = [
 ];
 
 export default defineConfig({
-  title: "Mitch‑VoidAuth",
+  title: "Mitch-Auth",
   description:
     "VoidAuth with LDAP Directory Sync — Single Sign-On for your self-hosted universe. A fork of voidauth/voidauth.",
   lang: "en-US",
@@ -81,13 +81,13 @@ export default defineConfig({
     socialLinks: [
       {
         icon: "github",
-        link: "https://github.com/mitchelljfranklin/mitch-voidauth",
+        link: "https://github.com/mitchelljfranklin/mitch-auth",
       },
     ],
 
     editLink: {
       pattern:
-        "https://github.com/mitchelljfranklin/mitch-voidauth/edit/mitch-voidauth/docs/:path",
+        "https://github.com/mitchelljfranklin/mitch-auth/edit/mitch-voidauth/docs/:path",
       text: "Edit this page on GitHub",
     },
 

@@ -11,7 +11,7 @@ The service expects a mounted volume for configuration, and either a postgres da
 ```yaml
 services:
   voidauth: 
-    image: ghcr.io/mitchelljfranklin/mitch-voidauth:latest
+    image: ghcr.io/mitchelljfranklin/mitch-auth:latest
     restart: unless-stopped
     volumes:
       - ./voidauth/config:/app/config
@@ -49,7 +49,7 @@ Below is an alternate Docker Compose setup using a SQLite database:
 ```yaml
 services:
   voidauth: 
-    image: ghcr.io/mitchelljfranklin/mitch-voidauth:latest
+    image: ghcr.io/mitchelljfranklin/mitch-auth:latest
     restart: unless-stopped
     volumes:
       - ./voidauth/config:/app/config

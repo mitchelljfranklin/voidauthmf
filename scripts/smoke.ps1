@@ -1,11 +1,11 @@
-# Runtime smoke test for a built mitch-voidauth image.
-# Usage: .\scripts\smoke.ps1 [-Image mitch-voidauth:local] [-Port 3002] [-Ldap]
+# Runtime smoke test for a built mitch-auth image.
+# Usage: .\scripts\smoke.ps1 [-Image mitch-auth:local] [-Port 3002] [-Ldap]
 # Boots a throwaway Postgres + app container pair on a docker network, asserts
 # the fork's security-relevant runtime behavior, then cleans up.
 # -Ldap additionally boots the embedded LDAP server and asserts it listens.
 
 param(
-  [string]$Image = 'mitch-voidauth:local',
+  [string]$Image = 'mitch-auth:local',
   [int]$Port = 3002,
   [switch]$Ldap
 )

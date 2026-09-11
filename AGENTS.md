@@ -25,7 +25,7 @@ When upstream's `Dockerfile` changes, mirror it into `Dockerfile.fork` (only the
 ## Fork-specific files (never upstream)
 
 - `Dockerfile.fork` — public `node:24-alpine3.22` instead of private `dhi.io/node:24-alpine3.22`
-- `.github/workflows/release-fork.yml` — multi-arch build/push to `ghcr.io/mitchelljfranklin/mitch-voidauth`
+- `.github/workflows/release-fork.yml` — multi-arch build/push to `ghcr.io/mitchelljfranklin/mitch-auth`
 - `.github/workflows/docs-fork.yml` — VitePress build → GitHub Pages (triggers on any push to `mitch-voidauth` touching `docs/**`)
 - `compose.fork.yml` — fork GHCR image, exposes LDAP port 3890
 - `.github/README.md` (fork landing page; root `README.md` stays upstream-clean), `SECURITY.md`, issue templates, PR template
